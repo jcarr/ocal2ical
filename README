@@ -1,0 +1,21 @@
+Oracle Calendar to iCal format
+ocal2ical - http://github.com/jcarr/ocal2ical/
+Jason Carr - jason.carr@gmail.com
+
+This creates a web server running on port 7000 that you can use on your iPhone or anything else that imports iCal format from live Oracle Calendar data.  Only is a one way transaction so you can't modify any calendar entries.  Send me some feedback on feature requests, bugs, or other questions.
+
+Requirements:
+ - Ruby 1.9 (with modifications 1.8 should work)
+ - ramaze
+ - rexml
+
+Configuration:
+ - Edit ocal.rb and modify the uri variable to be your URI for your Oracle Calendar server.  For example:
+     https://ocal.server.com/ocst-bin/ocas.fcgi
+
+How to use:
+ - This script just passes your credentials you pass it to the Oracle Calendar server.  It does pass it over HTTP, so if you need encryption you should use Apache and Phusion Passenger.
+ - Add a new calendar into your iPhone/other device http://servername.server.com:7000/ocal/get_ocal 
+ - Use your Oracle Calendar username and password
+ - Sync and enjoy!
+
