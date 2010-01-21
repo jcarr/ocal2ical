@@ -1,25 +1,22 @@
-#!/usr/bin/ruby
-
-# Oracle Calendar to iCal format
-# ocal2ical - http://github.com/jcarr/ocal2ical/
-# Jason Carr - jason.carr@gmail.com
-
 require 'rubygems'
 require 'ramaze'
-require 'ocal'
+require 'ocal-soap'
 require 'rexml/document'
+
 
 class MainController < Ramaze::Controller
   map "/ocal"
 
   def get_ocal()
+    url = "https://calendar.andrew.cmu.edu/ocws-bin/ocas.fcgi"
+
 vcal_header = <<VCAL
 BEGIN:VCALENDAR
-PRODID:-//ocal2ical//ocal2cal 1.0//EN
+PRODID:-//Jason Carr//Jason Carr 1.0//EN
 VERSION:2.0
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-X-WR-CALNAME:Oracle Calendar
+X-WR-CALNAME:Jason Carr
 X-WR-TIMEZONE:America/New_York
 BEGIN:VTIMEZONE
 TZID:America/New_York
@@ -48,18 +45,20 @@ VCAL
     auth = Rack::Auth::Basic::Request.new(request.env)
     if (auth.provided? && auth.basic?)
       username, password = auth.credentials
-      puts "authentication success - #{username}"
+      puts "authentication as #{username}"
     else
-      puts "authentication failed!"
-      respond("Authorization required", 401, "WWW-Authenticate" => 'Basic realm="ocal2ical - Oracle Calendar username/password"')
+      puts "authentication not passed, requesting via 401"
+      respond("Authorization required", 401, "WWW-Authenticate" => 'Basic realm="OCal CorpSync Password"')
     end
 
     calendar = Array.new
 
-    doc = REXML::Document.new(get_calendar(username,password))
+    result = get_calendar(username,password,url)
 
-    doc.elements.each('SyncML/SyncBody/Sync/Add/Item/Data') { |x|
-      cal = CalendarEntry.new(x.text)
+    doc = REXML::Document.new(result)
+
+    doc.elements.each('/soap:Envelope/soap:Body/cwsl:Reply/iCalendar/vcalendar/vevent') { |x|
+      cal = CalendarEntry.new(x)
       calendar.push(cal)
     }
 
