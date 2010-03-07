@@ -108,7 +108,7 @@ class CalendarEntry
     s += "BEGIN:VEVENT\n"
     #s += "STATUS:TENTATIVE\n"
     s += "STATUS:CONFIRMED\n"
-    if @length >= 24
+    if ((@length >= 24) || (@length == 0))
       ds = @date_start[0..7]
       de = @date_end[0..7]
       s += "DTSTART;VALUE=DATE:#{ds}\n"
@@ -133,7 +133,6 @@ class CalendarEntry
     # attendee list does show up on iphone but we don't get this via ocal :(
     #s += "ATTENDEE;MEMBER=\"mailto:ietf-calsch@example.org\":mailto:jsmith@example.com\n"
     #s += "ATTENDEE;PARTSTAT=DECLINED:mailto:jsmith@example.com\n"
-    #s += "ATTENDEE;PARTSTAT=ACCEPTED:mailto:blowme@example.com\n"
 
     s += "END:VEVENT\n"
 
