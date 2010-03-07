@@ -117,11 +117,11 @@ class CalendarEntry
       s += "DTSTART:" + @date_start + "\n"
       s += "DTEND:" + @date_end + "\n"
     
-      s += "BEGIN:VALARM\n"
-      s += "ACTION:DISPLAY\n"
-      s += "DESCRIPTION:REMINDER\n"
-      s += "TRIGGER;RELATED=START:-PT10M\n"
-      s += "END:VALARM\n"
+#      s += "BEGIN:VALARM\n"
+#      s += "ACTION:DISPLAY\n"
+#      s += "DESCRIPTION:REMINDER\n"
+#      s += "TRIGGER;RELATED=START:-PT10M\n"
+#      s += "END:VALARM\n"
     end
     
     s += "UID:" + @uid + "\n"
