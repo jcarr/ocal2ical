@@ -91,7 +91,7 @@ class CalendarEntry
     @date_start = o['dtstart'][:text]
     @date_end = o['dtend'][:text]
     hours, minutes, seconds, frac = frac_to_time(DateTime.parse(@date_end) - DateTime.parse(@date_start))
-    @length = hours
+    @length = hours + (minutes/60.00)
     @description = o['description'][:text]
   end
 
