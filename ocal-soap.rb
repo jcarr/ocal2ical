@@ -56,7 +56,8 @@ end
 
 def get_calendar(username,password,url)
   t1 = Date.parse(Time.now.strftime('%Y/%m/%d 00:00:00')).to_time
-  t2 = t1+(86400*7)
+  # get two weeks in the future
+  t2 = t1+(86400*14)
 
   result = soapCall("Search",soapEnv(soapHeader(username,password),search(t1,t2)),url)
 
@@ -64,7 +65,7 @@ def get_calendar(username,password,url)
 end
 
 class CalendarEntry
-  attr_reader :uid, :subject, :location, :date_start, :date_end, :length, :description
+  attr_reader :uid, :subject, :location, :date_start, :date_end, :length, :description, :attendee_list
   
   def initialize(body)
     #parse_vcal(body)
@@ -93,6 +94,17 @@ class CalendarEntry
     hours, minutes, seconds, frac = frac_to_time(DateTime.parse(@date_end) - DateTime.parse(@date_start))
     @length = hours + (minutes/60.00)
     @description = o['description'][:text]
+
+    @attendee_list = Hash.new
+    @attendee_list[o['x-oracle-loginuser'][:text]] = Hash.new
+    @attendee_list[o['x-oracle-loginuser'][:text]][:cn] = o['x-oracle-loginuser'][:attr]["cn"]
+    @attendee_list[o['x-oracle-loginuser'][:text]][:partstat] = o['x-oracle-loginuser-attendeestatus'][:text]
+    @attendee_list[o['x-oracle-loginuser'][:text]][:type] = "ATTENDEE"
+    
+    @attendee_list[o['organizer'][:text]] = Hash.new
+    @attendee_list[o['organizer'][:text]][:cn] = o['organizer'][:attr]["cn"]
+    @attendee_list[o['organizer'][:text]][:partstat] = 'ACCEPTED'
+    @attendee_list[o['organizer'][:text]][:type] = "ORGANIZER"
   end
 
   def frac_to_time(fr)
@@ -130,7 +142,10 @@ class CalendarEntry
     s += "SUMMARY:" + @subject + "\n"
 
 
-    # attendee list does show up on iphone but we don't get this via ocal :(
+    @attendee_list.each {|k,v|
+      s += "#{v[:type]};PARTSTAT=#{v[:partstat]};CN=\"#{v[:cn]}\":#{k}\n"
+    }
+
     #s += "ATTENDEE;MEMBER=\"mailto:ietf-calsch@example.org\":mailto:jsmith@example.com\n"
     #s += "ATTENDEE;PARTSTAT=DECLINED:mailto:jsmith@example.com\n"
 

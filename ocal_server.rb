@@ -5,7 +5,9 @@ require 'rexml/document'
 
 
 class MainController < Ramaze::Controller
-  map "/ocal"
+  def index
+    "Subscribe to your <a href=\"#{r(:get_ocal)}\">iCal feed</a> (requires login)."
+  end
 
   def get_ocal()
     url = "https://calendar.andrew.cmu.edu/ocws-bin/ocas.fcgi"
