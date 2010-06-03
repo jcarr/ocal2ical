@@ -71,7 +71,6 @@ VCAL
 
     if calendar.length == 0
       respond("Service Unavailable", 503)
-      #return ''
     end
 
     out = vcal_header
@@ -79,6 +78,8 @@ VCAL
       out += cal.to_ical
     }
     out += vcal_footer
+
+    puts out
 
     out
   end
