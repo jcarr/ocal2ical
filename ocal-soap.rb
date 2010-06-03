@@ -55,7 +55,8 @@ end
 
 
 def get_calendar(username,password,url)
-  t1 = Date.parse(Time.now.strftime('%Y/%m/%d 00:00:00')).to_time
+  #t1 = Date.parse(Time.now.strftime('%Y/%m/%d 00:00:00')).to_time
+  t1 = Time.parse(Time.now.strftime('%Y/%m/%d 00:00:00'))
   # get two weeks in the future
   t2 = t1+(86400*14)
 

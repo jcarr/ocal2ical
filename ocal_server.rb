@@ -1,3 +1,5 @@
+#!/usr/bin/ruby
+
 require 'rubygems'
 require 'ramaze'
 require 'ocal-soap'
@@ -52,6 +54,9 @@ VCAL
       puts "authentication not passed, requesting via 401"
       respond("Authorization required", 401, "WWW-Authenticate" => 'Basic realm="OCal CorpSync Password"')
     end
+
+    # set response to text/calendar
+    response.header['Content-Type'] = "text/calendar"
 
     calendar = Array.new
 
